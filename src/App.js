@@ -21,7 +21,10 @@ function App() {
   const [choiceFirst, setChoiceFirst] = useState(null);
   const [choiceSecond, setChoiceSecond] = useState(null);
 
+  const [disabled, setDisabled] = useState(false);
+
   const shuffle = () => {
+    setDisabled(false);
     const shuffled = [...cardPng, ...cardPng]
       .sort(() => Math.random() - 0.5)
       .map((card) => ({...card, id: Math.random()}))
@@ -35,6 +38,7 @@ function App() {
   }
 
   useEffect(() => {
+    setDisabled(false);
     if(choiceFirst && choiceSecond){
       if(choiceFirst.src === choiceSecond.src){
         setCards(prevCards => {
@@ -48,7 +52,7 @@ function App() {
         })
         resetTurns();
       }else{
-        setTimeout(()=>resetTurns(), 1000);
+        setTimeout(() => resetTurns(), 500);
       }
     }
   }, [choiceFirst,choiceSecond]);
@@ -57,15 +61,15 @@ function App() {
     setChoiceFirst(null);
     setChoiceSecond(null);
     setTurns(prevTurns => prevTurns + 1);
+    setDisabled(true);
   }
 
   return (
     <div className="App">
       <button onClick={shuffle}>New Game</button>
-
       <div className="card-grid">
         {cards.map(card=>(
-            <Card key={card.id} card={card} handleChoice={handleChoice} flipped={card===choiceFirst || card===choiceSecond || card.matched}/>
+            <Card key={card.id} card={card} handleChoice={handleChoice} flipped={card===choiceFirst || card===choiceSecond || card.matched} disabled={disabled}/>
         ))}
       </div>
     </div>
