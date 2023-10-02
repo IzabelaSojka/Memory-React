@@ -20,7 +20,7 @@ button:hover{
     color: rgb(255, 255, 255);
 }
 
-.card-grid-easy {
+.card-grid {
     margin-top: 20px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -33,6 +33,14 @@ button:hover{
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-gap: 20px;
 }
+
+.card-grid-mid {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 20px;
+}
+
 
 .time {
     background-color: rgb(216, 158, 211);

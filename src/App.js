@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import Card from './components/Card';
+import {Modal, Typography, Box} from '@mui/material';
 
 const cardPngEasy = [
   {"src": "/png/chameleon.png", matched: false},
@@ -11,6 +12,24 @@ const cardPngEasy = [
   {"src": "/png/snake.png", matched: false},
   {"src": "/png/mouse.png", matched: false},
   {"src": "/png/elephant.png", matched: false},
+]
+
+const cardPngMid = [
+  {"src": "/png1/png1.png", matched: false},
+  {"src": "/png1/png2.png", matched: false},
+  {"src": "/png1/png3.png", matched: false},
+  {"src": "/png1/png4.png", matched: false},
+  {"src": "/png1/png5.png", matched: false},
+  {"src": "/png1/png6.png", matched: false},
+  {"src": "/png1/png7.png", matched: false},
+  {"src": "/png1/png8.png", matched: false},
+  {"src": "/png1/png9.png", matched: false},
+  {"src": "/png1/png10.png", matched: false},
+  {"src": "/png1/png11.png", matched: false},
+  {"src": "/png1/png12.png", matched: false},
+  {"src": "/png1/png13.png", matched: false},
+  {"src": "/png1/png14.png", matched: false},
+  {"src": "/png1/png15.png", matched: false},
 ]
 
 const cardPngHard = [
@@ -58,10 +77,13 @@ function App() {
 
   const shuffle = (typeGame) => {
     if(typeGame === 1){
-      setType(false);
+      setType(1);
       cardPng = cardPngEasy;
+    }else if(typeGame === 2){
+      setType(2);
+      cardPng = cardPngMid;
     }else if(typeGame === 3){
-      setType(true);
+      setType(3);
       cardPng = cardPngHard;
     }
     setDisabled(false);
@@ -129,18 +151,21 @@ function App() {
 
   return (
     <div className="App">
+      <h1>Memory game</h1>
       <button onClick={() => shuffle(1)}>Easy</button>
+      <button onClick={() => shuffle(2)}>Medium</button>
       <button onClick={() => shuffle(3)}>Hard</button>
       <div className="time">
         {("0"+Math.floor((time/60000)%60)).slice(-2)}:
         {("0"+Math.floor((time/1000)%60)).slice(-2)}:
         {("0"+((time/60000)%60)).slice(-2)}
       </div>
-      <div className={type ? "card-grid-hard" : "card-grid-easy"}>
+      <div className={(type === 1) ? "card-grid" : ((type === 3) ? "card-grid-hard" : "card-grid-mid")}>
         {cards.map(card=>(
             <Card key={card.id} card={card} handleChoice={handleChoice} flipped={card===choiceFirst || card===choiceSecond || card.matched} disabled={disabled}/>
         ))}
       </div>
+      <div className="time">Turns: {turns}</div>
     </div>
   );
 }
