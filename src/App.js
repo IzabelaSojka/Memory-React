@@ -51,6 +51,9 @@ function App() {
   const [disabled, setDisabled] = useState(false);
   const [type, setType] = useState(false);
 
+  const [time, setTime] = useState(0);
+  const [onTime, setOnTime] = useState(false);
+
   var cardPng = [];
 
   const shuffle = (typeGame) => {
@@ -68,6 +71,8 @@ function App() {
 
     setCards(shuffled);
     setTurns(0);
+    setTime(0);
+    setOnTime(true);
   }
 
   const handleChoice = (card) => {
@@ -92,7 +97,28 @@ function App() {
         setTimeout(() => resetTurns(), 500);
       }
     }
-  }, [choiceFirst,choiceSecond]);
+  }, [choiceFirst,choiceSecond, onTime]);
+
+  useEffect(() => {
+    
+  }, [onTime]);
+
+  useEffect(() => {
+    let interval = null;
+    if(onTime){
+      interval = setInterval(() =>{
+        setTime(prevTime => prevTime + 10);
+        if (cards.every((card) => card.matched)) {
+        setOnTime(false); 
+      }
+      }, 10)
+    }
+    if(!onTime){
+      console.log(onTime, time);
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  },[onTime, cards, time])
 
   const resetTurns = () => {
     setChoiceFirst(null);
@@ -105,6 +131,11 @@ function App() {
     <div className="App">
       <button onClick={() => shuffle(1)}>Easy</button>
       <button onClick={() => shuffle(3)}>Hard</button>
+      <div className="time">
+        {("0"+Math.floor((time/60000)%60)).slice(-2)}:
+        {("0"+Math.floor((time/1000)%60)).slice(-2)}:
+        {("0"+((time/60000)%60)).slice(-2)}
+      </div>
       <div className={type ? "card-grid-hard" : "card-grid-easy"}>
         {cards.map(card=>(
             <Card key={card.id} card={card} handleChoice={handleChoice} flipped={card===choiceFirst || card===choiceSecond || card.matched} disabled={disabled}/>
