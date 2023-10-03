@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import Card from './components/Card';
-import {Modal, Typography, Box} from '@mui/material';
+import ModalComponent from './components/ModalComponent';
 
 const cardPngEasy = [
   {"src": "/png/chameleon.png", matched: false},
@@ -73,6 +73,8 @@ function App() {
   const [time, setTime] = useState(0);
   const [onTime, setOnTime] = useState(false);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   var cardPng = [];
 
   const shuffle = (typeGame) => {
@@ -122,17 +124,14 @@ function App() {
   }, [choiceFirst,choiceSecond, onTime]);
 
   useEffect(() => {
-    
-  }, [onTime]);
-
-  useEffect(() => {
     let interval = null;
     if(onTime){
       interval = setInterval(() =>{
         setTime(prevTime => prevTime + 10);
         if (cards.every((card) => card.matched)) {
-        setOnTime(false); 
-      }
+          setOnTime(false); 
+          setIsModalOpen(true);
+        }
       }, 10)
     }
     if(!onTime){
@@ -166,7 +165,9 @@ function App() {
         ))}
       </div>
       <div className="time">Turns: {turns}</div>
+      {isModalOpen && <ModalComponent time={time} onClose={() => setIsModalOpen(false)} open={isModalOpen} turns={turns}/>}
     </div>
+    
   );
 }
 
