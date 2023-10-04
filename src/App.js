@@ -59,7 +59,7 @@ const cardPngHard = [
   {"src": "/png2/png24.png", matched: false},
 ]
 
-function App() {
+export default function App() {
 
   const [cards, setCards] = useState([]);
   const [turns, setTurns] = useState(0);
@@ -68,7 +68,7 @@ function App() {
   const [choiceSecond, setChoiceSecond] = useState(null);
 
   const [disabled, setDisabled] = useState(false);
-  const [type, setType] = useState(false);
+  const [type, setType] = useState(0);
 
   const [time, setTime] = useState(0);
   const [onTime, setOnTime] = useState(false);
@@ -76,17 +76,21 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   var cardPng = [];
+  var score;
 
   const shuffle = (typeGame) => {
     if(typeGame === 1){
       setType(1);
       cardPng = cardPngEasy;
+      score = localStorage.getItem(1);
     }else if(typeGame === 2){
       setType(2);
       cardPng = cardPngMid;
+      score = localStorage.getItem(2);
     }else if(typeGame === 3){
       setType(3);
       cardPng = cardPngHard;
+      score = localStorage.getItem(3);
     }
     setDisabled(false);
     const shuffled = [...cardPng, ...cardPng]
@@ -97,6 +101,7 @@ function App() {
     setTurns(0);
     setTime(0);
     setOnTime(true);
+    console.log(score);
   }
 
   const handleChoice = (card) => {
@@ -131,6 +136,10 @@ function App() {
         if (cards.every((card) => card.matched)) {
           setOnTime(false); 
           setIsModalOpen(true);
+          if(score === 0 || score > time){
+            localStorage.setItem(type, time);
+            console.log(localStorage.getItem(type));
+          }
         }
       }, 10)
     }
@@ -151,9 +160,11 @@ function App() {
   return (
     <div className="App">
       <h1>Memory game</h1>
-      <button onClick={() => shuffle(1)}>Easy</button>
-      <button onClick={() => shuffle(2)}>Medium</button>
-      <button onClick={() => shuffle(3)}>Hard</button>
+      <div className="button-container"> 
+        <button onClick={() => shuffle(1)}>Easy</button>
+        <button onClick={() => shuffle(2)}>Medium</button>
+        <button onClick={() => shuffle(3)}>Hard</button>
+      </div>
       <div className="time">
         {("0"+Math.floor((time/60000)%60)).slice(-2)}:
         {("0"+Math.floor((time/1000)%60)).slice(-2)}:
@@ -166,9 +177,6 @@ function App() {
       </div>
       <div className="time">Turns: {turns}</div>
       {isModalOpen && <ModalComponent time={time} onClose={() => setIsModalOpen(false)} open={isModalOpen} turns={turns}/>}
-    </div>
-    
+    </div>  
   );
 }
-
-export default App;
