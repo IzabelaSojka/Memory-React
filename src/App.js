@@ -74,23 +74,23 @@ export default function App() {
   const [onTime, setOnTime] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [score, setScore] = useState(0);
 
   var cardPng = [];
-  var score;
 
   const shuffle = (typeGame) => {
     if(typeGame === 1){
       setType(1);
       cardPng = cardPngEasy;
-      score = localStorage.getItem(1);
+      setScore(localStorage.getItem(1));
     }else if(typeGame === 2){
       setType(2);
       cardPng = cardPngMid;
-      score = localStorage.getItem(2);
+      setScore(localStorage.getItem(2));
     }else if(typeGame === 3){
       setType(3);
       cardPng = cardPngHard;
-      score = localStorage.getItem(3);
+      setScore(localStorage.getItem(3));
     }
     setDisabled(false);
     const shuffled = [...cardPng, ...cardPng]
@@ -100,7 +100,7 @@ export default function App() {
     setCards(shuffled);
     setTurns(0);
     setTime(0);
-    setOnTime(true);
+    setOnTime(true)
     console.log(score);
   }
 
@@ -126,7 +126,7 @@ export default function App() {
         setTimeout(() => resetTurns(), 500);
       }
     }
-  }, [choiceFirst,choiceSecond, onTime]);
+  }, [choiceFirst,choiceSecond, onTime, score]);
 
   useEffect(() => {
     let interval = null;
@@ -136,19 +136,19 @@ export default function App() {
         if (cards.every((card) => card.matched)) {
           setOnTime(false); 
           setIsModalOpen(true);
-          if(score === 0 || score > time){
-            localStorage.setItem(type, time);
-            console.log(localStorage.getItem(type));
-          }
+          
         }
       }, 10)
     }
     if(!onTime){
+      if(score === 0 || score > time){
+        localStorage.setItem(type, time);
+      }
       console.log(onTime, time);
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  },[onTime, cards, time])
+  },[onTime, cards, time, type, score])
 
   const resetTurns = () => {
     setChoiceFirst(null);
