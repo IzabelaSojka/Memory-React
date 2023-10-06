@@ -159,11 +159,17 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Memory game</h1>
+      <h1>Memory    game</h1>
       <div className="button-container"> 
         <button onClick={() => shuffle(1)}>Easy</button>
         <button onClick={() => shuffle(2)}>Medium</button>
         <button onClick={() => shuffle(3)}>Hard</button>
+      </div>
+      <div className="the-best">
+        The best time:   
+        {("0"+Math.floor((score/60000)%60)).slice(-2)}:
+        {("0"+Math.floor((score/1000)%60)).slice(-2)}:
+        {("0"+((score/60000)%60)).slice(-2)}
       </div>
       <div className="time">
         {("0"+Math.floor((time/60000)%60)).slice(-2)}:
